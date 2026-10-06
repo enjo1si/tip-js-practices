@@ -2,9 +2,9 @@
 
 
 
-const totalTasks = 12;
-const completedTasks = 5;
-const dailyLimit = 3;
+const totalTasks = 7;
+const completedTasks = 2;
+const dailyLimit = 2;
 
 
 const isValidTasks =

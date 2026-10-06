@@ -1,10 +1,8 @@
 "use strict";
 
 
-
-const totalTasks = 12;
-const completedTasks = 5;
-
+const totalTasks = 7;
+const completedTasks = 2;
 
 const isValid =
     Number.isInteger(totalTasks) &&
