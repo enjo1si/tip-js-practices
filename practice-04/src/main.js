@@ -1,4 +1,4 @@
-import { demoTasks, variantTasks } from "./data.js";
+import { demoTasks, variantTasks, variantNumber } from "./data.js";
 import {
     findTaskById,
     getTaskStats,
@@ -41,11 +41,13 @@ const emptyElement = document.querySelector("#empty-message");
 const filtersElement = document.querySelector("#task-filters");
 const operationMessage = document.querySelector("#operation-message");
 const form = document.querySelector("#task-form");
-const formTitle = document.querySelector("#form-title");
-const submitButton = document.querySelector("#submit-button");
-const cancelButton = document.querySelector("#cancel-button");
-const resetButton = document.querySelector("#reset-button");
-const storageMessage = document.querySelector("#storage-message");
+const formMessage = document.querySelector("#form-message");
+const formMode = document.querySelector("#form-mode");
+const submitButton = document.querySelector("#form-submit");
+const cancelButton = document.querySelector("#cancel-edit");
+const resetButton = document.querySelector("#reset-data");
+const storageStatus = document.querySelector("#storage-status");
+const datasetLabel = document.querySelector("#dataset-label");
 
 const inputs = {
     id: form.querySelector('[name="id"]'),
@@ -53,20 +55,24 @@ const inputs = {
     priority: form.querySelector('[name="priority"]'),
 };
 
+if (datasetLabel) {
+    datasetLabel.textContent = useVariant
+        ? `Индивидуальный набор (вариант ${variantNumber})`
+        : "Общий контрольный набор";
+}
+
 function showError(text) {
     operationMessage.textContent = text;
-    operationMessage.hidden = false;
 }
 
 function clearError() {
     operationMessage.textContent = "";
-    operationMessage.hidden = true;
 }
 
 function showFormErrors(errors) {
     for (const field of ["id", "title", "priority"]) {
         const input = inputs[field];
-        const errorElement = document.querySelector(`[data-error="${field}"]`);
+        const errorElement = document.querySelector(`[data-error-for="${field}"]`);
         if (errors[field]) {
             errorElement.textContent = errors[field];
             input.setAttribute("aria-invalid", "true");
@@ -79,6 +85,11 @@ function showFormErrors(errors) {
 
 function clearFormErrors() {
     showFormErrors({});
+}
+
+function setStorageStatus(text, isWarning = false) {
+    storageStatus.textContent = text;
+    storageStatus.classList.toggle("is-warning", isWarning);
 }
 
 function renderApp() {
@@ -99,8 +110,9 @@ function setFormMode(id) {
         editingId = null;
         form.reset();
         clearFormErrors();
+        formMessage.textContent = "";
         inputs.id.disabled = false;
-        formTitle.textContent = "Добавление задачи";
+        formMode.textContent = "Режим создания новой задачи.";
         submitButton.textContent = "Добавить задачу";
         cancelButton.hidden = true;
         inputs.id.focus();
@@ -109,20 +121,30 @@ function setFormMode(id) {
 
     const task = findTaskById(currentTasks, id);
     if (!task) {
-        showError("Задача для редактирования не найдена.");
+        formMessage.textContent = "Задача для редактирования не найдена.";
         return;
     }
 
     editingId = id;
     clearFormErrors();
+    formMessage.textContent = "";
     inputs.id.value = String(task.id);
     inputs.id.disabled = true;
     inputs.title.value = task.title;
     inputs.priority.value = task.priority;
-    formTitle.textContent = "Редактирование задачи";
+    formMode.textContent = `Режим редактирования задачи id = ${task.id}.`;
     submitButton.textContent = "Сохранить изменения";
     cancelButton.hidden = false;
     inputs.title.focus();
+}
+
+function persistTasks() {
+    const save = saveTasks(localStorage, storageKey, currentTasks);
+    if (!save.ok) {
+        setStorageStatus(save.error, true);
+    } else {
+        setStorageStatus("Изменения сохранены.");
+    }
 }
 
 function handleFormSubmit(event) {
@@ -131,18 +153,12 @@ function handleFormSubmit(event) {
 
     const formData = new FormData(form);
     const draft = {
-        id: formData.get("id"),
+        id: editingId === null ? formData.get("id") : editingId,
         title: formData.get("title"),
         priority: formData.get("priority"),
     };
 
-    // В режиме редактирования id берём из editingId (поле disabled → не попадает в FormData)
-    const validation = validateTaskDraft(
-        { ...draft, id: editingId === null ? draft.id : editingId },
-        currentTasks,
-        editingId
-    );
-
+    const validation = validateTaskDraft(draft, currentTasks, editingId);
     if (!validation.ok) {
         showFormErrors(validation.errors);
         return;
@@ -159,20 +175,12 @@ function handleFormSubmit(event) {
     }
 
     if (!result.ok) {
-        showError(result.error);
+        formMessage.textContent = result.error;
         return;
     }
 
     currentTasks = result.tasks;
-
-    const save = saveTasks(localStorage, storageKey, currentTasks);
-    if (!save.ok) {
-        storageMessage.textContent = save.error;
-        storageMessage.hidden = false;
-    } else {
-        storageMessage.hidden = true;
-    }
-
+    persistTasks();
     setFormMode(null);
     renderApp();
 }
@@ -201,8 +209,8 @@ function handleTaskListClick(event) {
     }
 
     if (action === "edit") {
-        setFormMode(id);
         clearError();
+        setFormMode(id);
         return;
     }
 
@@ -224,14 +232,7 @@ function handleTaskListClick(event) {
         setFormMode(null);
     }
 
-    const save = saveTasks(localStorage, storageKey, currentTasks);
-    if (!save.ok) {
-        storageMessage.textContent = save.error;
-        storageMessage.hidden = false;
-    } else {
-        storageMessage.hidden = true;
-    }
-
+    persistTasks();
     clearError();
     renderApp();
 }
@@ -255,7 +256,7 @@ function handleResetClick() {
     currentFilter = "all";
     setFormMode(null);
     clearError();
-    storageMessage.hidden = true;
+    setStorageStatus("Сохранённые данные удалены, восстановлен исходный набор.");
     renderApp();
 }
 
@@ -267,14 +268,18 @@ resetButton.addEventListener("click", handleResetClick);
 
 for (const field of ["id", "title", "priority"]) {
     inputs[field].addEventListener("input", () => {
-        const errorElement = document.querySelector(`[data-error="${field}"]`);
+        const errorElement = document.querySelector(`[data-error-for="${field}"]`);
         errorElement.textContent = "";
         inputs[field].removeAttribute("aria-invalid");
     });
 }
 
 if (!loadResult.ok) {
-    showError(loadResult.error || "Не удалось загрузить сохранённые данные.");
+    setStorageStatus(loadResult.error || "Не удалось загрузить сохранённые данные.", true);
+} else if (loadResult.source === "storage") {
+    setStorageStatus("Данные восстановлены из localStorage.");
+} else {
+    setStorageStatus("Использован исходный набор.");
 }
 
 setFormMode(null);
