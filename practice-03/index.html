@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПР3 — Задачи</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="app-header">
+    <h1>Менеджер задач</h1>
+    <nav class="app-nav">
+        <a href="./index.html">Общий набор</a>
+        <a href="./index.html?dataset=variant">Свой вариант</a>
+        <a href="./examples/dom-events.html">Эксперименты</a>
+        <a href="./checks.html">Проверки</a>
+    </nav>
+</header>
+
+<main>
+    <section id="task-summary" class="summary">
+        <div>Всего: <span data-stat="total">0</span></div>
+        <div>Выполнено: <span data-stat="completed">0</span></div>
+        <div>Осталось: <span data-stat="pending">0</span></div>
+        <div>Прогресс: <span data-stat="progress">0.0%</span></div>
+        <div>Показано: <span data-stat="visible">0</span></div>
+    </section>
+
+    <section id="task-filters" class="filters">
+        <button type="button" data-filter="all" class="is-active" aria-pressed="true">
+            <span>Все</span>
+        </button>
+        <button type="button" data-filter="pending" aria-pressed="false">
+            <span>В работе</span>
+        </button>
+        <button type="button" data-filter="completed" aria-pressed="false">
+            <span>Выполненные</span>
+        </button>
+    </section>
+
+    <p id="operation-message" class="operation-message" hidden></p>
+    <p id="empty-message" class="empty-message" hidden></p>
+
+    <ul id="task-list" class="task-list"></ul>
+</main>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    color: #222;
+    background: #fafafa;
+}
+
+.app-header {
+    padding: 20px;
+    background: #f2f2f2;
+    border-bottom: 1px solid #ddd;
+}
+
+.app-header h1 {
+    margin: 0 0 12px;
+    font-size: 22px;
+}
+
+.app-nav a {
+    margin-right: 16px;
+    color: #0057b8;
+    text-decoration: none;
+}
+
+.app-nav a:hover { text-decoration: underline; }
+
+main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+.summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px;
+    background: #eef5ff;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.filters button {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.filters button:hover {
+    border-color: #0057b8;
+}
+
+.filters button:focus-visible {
+    outline: 2px solid #0057b8;
+    outline-offset: 2px;
+}
+
+.filters button.is-active {
+    background: #0057b8;
+    color: #fff;
+    border-color: #0057b8;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.task-card {
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.task-card:hover {
+    border-color: #0057b8;
+    box-shadow: 0 0 0 2px rgba(0, 87, 184, 0.15);
+}
+
+.task-card.is-completed {
+    opacity: 0.7;
+}
+
+.task-title {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.task-status,
+.task-priority {
+    display: inline-block;
+    margin-right: 12px;
+    font-size: 14px;
+    color: #555;
+}
+
+.task-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.task-actions button {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.task-actions button:hover {
+    border-color: #0057b8;
+}
+
+.task-actions button:focus-visible {
+    outline: 2px solid #0057b8;
+    outline-offset: 2px;
+}
+
+.operation-message {
+    padding: 12px;
+    margin-bottom: 16px;
+    border-left: 4px solid #b00020;
+    background: #fdecef;
+}
+
+.empty-message {
+    padding: 12px;
+    border-left: 4px solid #0057b8;
+    background: #eef5ff;
+}
+
+[hidden] {
+    display: none !important;
+}
