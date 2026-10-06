@@ -1,0 +1,68 @@
+.form-section {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.form-section h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.form-field {
+    margin-bottom: 12px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.form-field input:focus-visible,
+.form-field select:focus-visible {
+    outline: 2px solid #0057b8;
+    outline-offset: 2px;
+}
+
+.form-field [aria-invalid="true"] {
+    border-color: #b00020;
+}
+
+.error {
+    display: block;
+    margin-top: 4px;
+    color: #b00020;
+    font-size: 13px;
+    min-height: 16px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.reset-button {
+    padding: 8px 14px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.reset-button:hover {
+    border-color: #b00020;
+    color: #b00020;
+}

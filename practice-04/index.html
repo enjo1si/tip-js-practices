@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ПР4 — Задачи</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="app-header">
+    <h1>Менеджер задач</h1>
+    <nav class="app-nav">
+        <a href="./index.html">Общий набор</a>
+        <a href="./index.html?dataset=variant">Свой вариант</a>
+        <a href="./examples/forms-storage.html">Эксперименты</a>
+        <a href="./checks.html">Проверки</a>
+    </nav>
+</header>
+
+<main>
+    <section id="task-summary" class="summary">
+        <div>Всего: <span data-stat="total">0</span></div>
+        <div>Выполнено: <span data-stat="completed">0</span></div>
+        <div>Осталось: <span data-stat="pending">0</span></div>
+        <div>Прогресс: <span data-stat="progress">0.0%</span></div>
+        <div>Показано: <span data-stat="visible">0</span></div>
+    </section>
+
+    <section class="form-section">
+        <h2 id="form-title">Добавление задачи</h2>
+        <form id="task-form" novalidate>
+            <div class="form-field">
+                <label for="task-id">Идентификатор</label>
+                <input id="task-id" name="id" type="number" min="1" step="1" required>
+                <small class="error" data-error="id"></small>
+            </div>
+
+            <div class="form-field">
+                <label for="task-title">Название</label>
+                <input id="task-title" name="title" type="text" maxlength="100" required>
+                <small class="error" data-error="title"></small>
+            </div>
+
+            <div class="form-field">
+                <label for="task-priority">Приоритет</label>
+                <select id="task-priority" name="priority" required>
+                    <option value="low">Низкий</option>
+                    <option value="medium" selected>Средний</option>
+                    <option value="high">Высокий</option>
+                </select>
+                <small class="error" data-error="priority"></small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" id="submit-button">Добавить задачу</button>
+                <button type="button" id="cancel-button" hidden>Отмена</button>
+            </div>
+        </form>
+    </section>
+
+    <section id="task-filters" class="filters">
+        <button type="button" data-filter="all" class="is-active" aria-pressed="true"><span>Все</span></button>
+        <button type="button" data-filter="pending" aria-pressed="false"><span>В работе</span></button>
+        <button type="button" data-filter="completed" aria-pressed="false"><span>Выполненные</span></button>
+    </section>
+
+    <button type="button" id="reset-button" class="reset-button">Сбросить сохранённые данные</button>
+
+    <p id="operation-message" class="operation-message" hidden></p>
+    <p id="storage-message" class="operation-message" hidden></p>
+    <p id="empty-message" class="empty-message" hidden></p>
+
+    <ul id="task-list" class="task-list"></ul>
+</main>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
